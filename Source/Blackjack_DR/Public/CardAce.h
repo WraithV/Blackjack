@@ -13,6 +13,11 @@ UCLASS()
 class BLACKJACK_DR_API ACardAce : public ACard
 {
 	GENERATED_BODY()
+
+	public:
+	int CardValue = 11;
+	FString CardName = "A";
 	
+	public:
 	virtual bool ReduceValue();
 };

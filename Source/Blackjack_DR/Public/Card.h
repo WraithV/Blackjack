@@ -16,9 +16,9 @@ public:
 	ACard();
 
 	UPROPERTY(EditAnywhere)
-	int CardValue = 50;
+	int CardValue = 0;
 	FString CardName = ""; //FString more expensive than FText or FName
-	bool FaceUp = false;
+	bool FaceUp = true;
 
 protected:
 	// Called when the game starts or when spawned
