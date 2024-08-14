@@ -68,7 +68,7 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 
 		return false;
 	}
-	else if (PlayerScore = WinScore) //score equals winscore, automatically stands
+	else if (PlayerScore == WinScore) //score equals winscore, automatically stands
 	{
 		PlayerStands();
 
@@ -92,7 +92,7 @@ void ABlackJack_Pawn::resetPlayer()
 	//TODO: reset widgets
 }
 
-void ABlackJack_Pawn::PlayerHit(ACard* NewCard, bool IsFaceUp)
+void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 {
 	PlayerHand.Add(NewCard);
 	//TODO: add card widget
@@ -135,7 +135,7 @@ void ABlackJack_Pawn::DealerPlay()
 	for (int i = 0; i < 10; i++)
 	{
 		//TODO: call player hit interface
-		if (!CalculatePlayerScore || PlayerScore >= DealerMin)
+		if (!CalculatePlayerScore() || PlayerScore >= DealerMin)
 		{
 			break;
 		}

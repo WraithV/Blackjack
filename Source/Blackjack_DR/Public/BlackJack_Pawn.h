@@ -45,7 +45,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void resetPlayer();
-	virtual void PlayerHit(ACard* NewCard, bool IsFaceUp);
+	virtual void PlayerAddCard(ACard* NewCard, bool IsFaceUp);
 	virtual void PlayerStands();
 	virtual void PlayerBust();
 

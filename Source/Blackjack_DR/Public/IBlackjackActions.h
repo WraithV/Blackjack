@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Blackjack_Interface.generated.h"
+#include "IBlackjackActions.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UBlackjack_Interface : public UInterface
+class UBlackjackActions : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,10 +16,15 @@ class UBlackjack_Interface : public UInterface
 /**
  * 
  */
-class BLACKJACK_DR_API IBlackjack_Interface
+class BLACKJACK_DR_API IBlackjackActions
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	virtual void PlayerHit();
+	virtual void PlayerStand();
+	virtual void DealerEnds();
+	virtual void StartGame();
+	virtual void EndTurn();
 };
