@@ -125,9 +125,22 @@ void ABlackJack_Pawn::DealerPlay()
 
 	if (!CalculatePlayerScore())
 	{
-		//TODO: exit?
+		//TODO: call dealer ends interface
 	}
-
+	if (PlayerScore >= DealerMin)
+	{
+		//TODO: call dealer ends interface
+	}
+	//deal until dealer hits his max or busts
+	for (int i = 0; i < 10; i++)
+	{
+		//TODO: call player hit interface
+		if (!CalculatePlayerScore || PlayerScore >= DealerMin)
+		{
+			break;
+		}
+	}
+	//TODO: call dealer ends interface
 }
 
 // Called to bind functionality to input
