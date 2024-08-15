@@ -21,16 +21,22 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int PlayerScore;
+	UPROPERTY(EditAnywhere)
 	int WinScore = 21;
+	UPROPERTY(EditAnywhere)
 	FString PlayerName;
+	UPROPERTY(EditAnywhere)
 	FString PlayerStatus;
 
+	UPROPERTY(EditAnywhere)
 	TArray<class ACard*> PlayerHand; //Card Actors
 
 	TSubclassOf<UUserWidget> WPlayerHand; //Widget connected to this player
 
 	//Dealer Variables
+	UPROPERTY(EditAnywhere)
 	bool IsDealer = false;
+	UPROPERTY(EditAnywhere)
 	int DealerMin = 17;
 
 
