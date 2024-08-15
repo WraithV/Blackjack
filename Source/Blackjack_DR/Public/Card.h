@@ -17,7 +17,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int CardValue = 0;
-	FString CardName = ""; //FString more expensive than FText or FName
+	UPROPERTY(EditAnywhere)
+	FString CardName = "";
+	UPROPERTY(EditAnywhere)
 	bool FaceUp = true;
 
 protected:

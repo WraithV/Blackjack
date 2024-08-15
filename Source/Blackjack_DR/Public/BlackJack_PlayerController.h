@@ -25,21 +25,32 @@ class BLACKJACK_DR_API ABlackJack_PlayerController : public APlayerController, p
 public:
 	UPROPERTY(EditAnywhere)
 	int NumPlayers = 3;
+	UPROPERTY(EditAnywhere)
 	int CurrentPlayerIndex; //TODO: do we need this as well as currentPlayer?
+	UPROPERTY(EditAnywhere)
 	int CurrentCard = 0;
 
+	UPROPERTY(EditAnywhere)
 	TArray<class ABlackJack_Pawn*> PlayerList;
+
+	UPROPERTY(EditAnywhere)
 	TArray<class ACard*> CardDeck;
 
-	FDataTableRowHandle DeckSpecialCards; //TODO: need to set this in UE?
+	UPROPERTY(EditAnywhere)
+	UDataTable* CardDataTable; //TODO: set this in UE class
 
 	//Data table deck
-
+	UPROPERTY(EditAnywhere)
 	ABlackJack_Pawn* CurrentPlayer;
+	UPROPERTY(EditAnywhere)
 	ABlackJack_Pawn* DealerPawn;
 
 	//Main widget
 	//list of player hand widgets - TODO: move this elsewhere
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 
 public:
 	//virtual void InitGame();
