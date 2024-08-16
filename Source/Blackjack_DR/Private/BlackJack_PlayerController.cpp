@@ -16,8 +16,6 @@ void ABlackJack_PlayerController::BeginPlay()
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
 
-	//TODO: create widget add to viewport
-
 	ABlackJack_Pawn* NewPawn;
 
 	for(int i = 0; i < (NumPlayers + 1); i++)
@@ -40,7 +38,13 @@ void ABlackJack_PlayerController::BeginPlay()
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Setup Player %i"), i));
 		}
 
+		
+		//NewPawn->SetupDelegates();
+
+
 	}
+
+
 
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("created %i"), PlayerList.Num()));
 
@@ -58,7 +62,6 @@ void ABlackJack_PlayerController::BeginPlay()
 		GameBoard->CreatePlayerHandWidgets(PlayerList[i], i);
 	}
 
-	//TODO:create hand widget for players
 }
 
 //Spawn Card Actor and initialize values
@@ -157,18 +160,14 @@ void ABlackJack_PlayerController::DetermineWinners()
 		{
 			CurrentPawn->SendStatus("WINNER!");
 
-			//TODO: update feedback
-			//player WINS
 		}
 		else if (CurrentPawn->PlayerScore == DealerScore)
 		{
-			CurrentPawn->SendStatus("TIE");
-			//player TIES
+			CurrentPawn->SendStatus("Tie");
 		}
 		else
 		{
-			CurrentPawn->SendStatus("Loser");
-			//player loses
+			CurrentPawn->SendStatus("Bad Luck");
 		}
 	}
 
@@ -212,8 +211,7 @@ void ABlackJack_PlayerController::DealerEnds_Implementation()
 {
 	DetermineWinners();
 
-	//TODO update widgets
-	//update widget
+	GameBoard->RoundFinished();
 
 }
 
@@ -221,16 +219,30 @@ void ABlackJack_PlayerController::DealerEnds_Implementation()
 void ABlackJack_PlayerController::StartGame_Implementation()
 {
 	CurrentCard = 0;
+
+	for (int i = 0; i < PlayerList.Num() ;i++) 
+	{
+		PlayerList[i]->resetPlayer();
+	}
+
+
+	//DiscardCards.Broadcast();
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("fired delegate 1")));
+	//CALL DELEGATE
+
+	//TODO: Declare delegate
+	// 
 	//TODO: event dispatcher to clear hand
 	
 	ShuffleArray(CardDeck);
 	CurrentPlayerIndex = 0;
+
 	CurrentPlayer = PlayerList[CurrentPlayerIndex];
 
 	this->UnPossess();
 	this->Possess(CurrentPlayer);
 	CurrentPlayer->StartPlaying();
-	//EndTurn_Implementation();
 
 	DealCards();
 }

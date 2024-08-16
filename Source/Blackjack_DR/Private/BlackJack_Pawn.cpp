@@ -4,6 +4,9 @@
 
 #include "IBlackjackActions.h"
 //#include "GameFramework/PlayerController.h"
+
+#include "BlackJack_PlayerController.h"
+
 #include "Kismet/GameplayStatics.h"
 
 
@@ -15,17 +18,30 @@ ABlackJack_Pawn::ABlackJack_Pawn()
 
 }
 
+void ABlackJack_Pawn::ClearHand()
+{
+}
+
 // Called when the game starts or when spawned
 void ABlackJack_Pawn::BeginPlay()
 {
-	Super::BeginPlay();
-
-	//TODO: bind to event dispatcher to clear player hand
 	
 }
 
+void ABlackJack_Pawn::SetupDelegates()
+{
+	//APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
+	//ABlackJack_PlayerController* BJ_PC = Cast<ABlackJack_PlayerController>(controller);
 
+	//BJ_PC->FAllDiscard.AddUObject(this, &ABlackJack_Pawn::resetPlayer);
+
+	////MyDel.BindUFunction(this, FName("DoSomething"));
+
+	////BJ_PC->AllPlayersDiscard.AddDynamic(this, &ABlackJack_Pawn::resetPlayer); //Bind to Delegate
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Bound delegate for %s"), *PlayerName));
+}
 
 
 bool ABlackJack_Pawn::CalculatePlayerScore()
@@ -109,6 +125,10 @@ void ABlackJack_Pawn::StartPlaying()
 
 void ABlackJack_Pawn::resetPlayer()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("fired delegate 2")));
+
+	SendStatus("Waiting");
+
 	PlayerScore = 0;
 	PlayerHand.Empty();
 
@@ -138,15 +158,6 @@ void ABlackJack_Pawn::PlayerStands()
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Stands"), *PlayerName));
 
-	//APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	//if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
-	//{
-	//	IBlackjackActions::Execute_EndTurn(controller);
-	//}
-	
-
-	//TODO: widget update player status: Stand
 }
 
 
@@ -177,7 +188,6 @@ void ABlackJack_Pawn::DealerPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("no pawn for dealer")));
 	}
 	WPlayerHandWidget->FlipCards();
-	//TODO: widget Flipcard
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Dealer Plays")));
 

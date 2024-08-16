@@ -16,6 +16,9 @@
 
 #include "BlackJack_PlayerController.generated.h"
 
+//UDELEGATE()
+//DECLARE_MULTICAST_DELEGATE(FAllDiscard);
+
 /**
  * 
  */
@@ -54,6 +57,9 @@ public:
 	UPROPERTY()
 	UBlackJackBoard* GameBoard;
 
+	//UPROPERTY(BlueprintAssignable)
+	//FAllDiscard FAllDiscard;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -62,6 +68,8 @@ protected:
 
 public:
 	//virtual void InitGame();
+
+	//void AllDiscard();
 
 	virtual void SpawnCardActor(int Value, FString Name);
 

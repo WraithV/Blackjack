@@ -9,6 +9,7 @@
 #include "CardAce.h"
 
 #include "PlayerHand.h"
+//#include "BlackJack_PlayerController.h"
 
 #include "BlackJack_Pawn.generated.h"
 
@@ -46,7 +47,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int DealerMin = 17;
 
-
+private:
+	virtual void ClearHand();
 
 protected:
 	// Called when the game starts or when spawned
@@ -57,6 +59,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void SetupDelegates();
+
 	virtual void StartPlaying();
 	virtual void resetPlayer();
 	virtual void PlayerAddCard(ACard* NewCard, bool IsFaceUp);
