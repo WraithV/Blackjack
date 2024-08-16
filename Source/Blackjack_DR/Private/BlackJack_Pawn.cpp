@@ -22,11 +22,11 @@ void ABlackJack_Pawn::ClearHand()
 {
 }
 
-// Called when the game starts or when spawned
-void ABlackJack_Pawn::BeginPlay()
-{
-	
-}
+//// Called when the game starts or when spawned
+//void ABlackJack_Pawn::BeginPlay()
+//{
+//	
+//}
 
 void ABlackJack_Pawn::SetupDelegates()
 {
@@ -193,16 +193,12 @@ void ABlackJack_Pawn::DealerPlay()
 
 	//APlayerController* controller = this->GetController()
 
-	if (!CalculatePlayerScore() || PlayerScore >= DealerMin) //End turn if dealer is over DealerMax
+	if (!CalculatePlayerScore() || PlayerScore >= DealerMin) //End turn if dealer is over DealerMin score
 	{
 
 		IBlackjackActions::Execute_DealerEnds(this->GetController());
 
 	}
-	//if (PlayerScore >= DealerMin)
-	//{
-	//	IBlackjackActions::Execute_DealerEnds(this->GetController());
-	//}
 	//deal until dealer hits his max or busts
 	for (int i = 0; i < 10; i++)
 	{

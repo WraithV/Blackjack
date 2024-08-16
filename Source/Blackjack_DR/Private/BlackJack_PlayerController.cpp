@@ -145,8 +145,10 @@ void ABlackJack_PlayerController::DetermineWinners()
 	int DealerScore = DealerPawn->PlayerScore;
 	for (ABlackJack_Pawn* CurrentPawn : PlayerList)
 	{
+
 		if (CurrentPawn->IsDealer)
 		{
+			CurrentPawn->SendStatus("");
 			return; //don't update dealers status
 		}
 		if (CurrentPawn->PlayerScore < 0)
@@ -228,7 +230,6 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 
 	//DiscardCards.Broadcast();
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("fired delegate 1")));
 	//CALL DELEGATE
 
 	//TODO: Declare delegate
