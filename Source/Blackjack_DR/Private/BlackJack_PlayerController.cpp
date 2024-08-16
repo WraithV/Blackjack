@@ -4,6 +4,9 @@
 
 #include "FCardData.h"
 
+#include "BlackJackBoard.h"
+#include "Blueprint/UserWidget.h"
+
 
 void ABlackJack_PlayerController::BeginPlay()
 {
@@ -22,6 +25,7 @@ void ABlackJack_PlayerController::BeginPlay()
 		NewPawn = GetWorld()->SpawnActor<ABlackJack_Pawn>(Location, Rotation, SpawnInfo);
 
 		PlayerList.Add(NewPawn);
+
 		if (i == NumPlayers) //Setup last player as the dealer
 		{
 			NewPawn->IsDealer = true;
@@ -35,12 +39,24 @@ void ABlackJack_PlayerController::BeginPlay()
 
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Setup Player %i"), i));
 		}
-		//dealer
+
 	}
 
-	
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("created %i"), PlayerList.Num()));
 
 	CreateCardDeck();
+
+	GameBoard = CreateWidget<UBlackJackBoard>(this, UIClass);
+	check(GameBoard);
+	GameBoard->AddToPlayerScreen();
+
+
+	//ABlackJack_Pawn* CurrentPawn : PlayerList
+
+	for (int i = 0; i < PlayerList.Num(); i++)
+	{
+		GameBoard->CreatePlayerHandWidgets(PlayerList[i], i);
+	}
 
 	//TODO:create hand widget for players
 }
@@ -90,7 +106,7 @@ void ABlackJack_PlayerController::CreateCardDeck()
 
 			FCardData* MyStruct = reinterpret_cast<FCardData*>(data.Value);
 
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Create Card %s"), *MyStruct->CardName));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Create Card %s"), *MyStruct->CardName));
 			
 
 			SpawnCardActor(MyStruct->CardValue, MyStruct->CardName);
@@ -102,7 +118,7 @@ void ABlackJack_PlayerController::CreateCardDeck()
 //Deal two cards to all players, the dealers second card value is hidden (face down)
 void ABlackJack_PlayerController::DealCards()
 {
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		for (ABlackJack_Pawn* CurrentPawn : PlayerList)
 		{
@@ -154,22 +170,39 @@ void ABlackJack_PlayerController::DetermineWinners()
 
 }
 
+//Shuffle the Cards
+void ABlackJack_PlayerController::ShuffleArray(TArray<ACard*>& myArray)
+{
+	if (myArray.Num() > 0)
+	{
+		int32 LastIndex = myArray.Num() - 1;
+		for (int32 i = 0; i <= LastIndex; ++i)
+		{
+			int32 Index = FMath::RandRange(i, LastIndex);
+			if (i != Index)
+			{
+				myArray.Swap(i, Index);
+			}
+		}
+	}
+}
+
 /*Blackjack Actions Interface Implementations*/
 
 //Player hits, give them another card
-void ABlackJack_PlayerController::PlayerHit()
+void ABlackJack_PlayerController::PlayerHit_Implementation()
 {
 	CurrentPlayer->PlayerAddCard(CardDeck[CurrentCard], true);
 	CurrentCard++;
 }
 
-void ABlackJack_PlayerController::PlayerStand()
+void ABlackJack_PlayerController::PlayerStand_Implementation()
 {
-	EndTurn();
+	EndTurn_Implementation();
 	//end turn
 }
 
-void ABlackJack_PlayerController::DealerEnds()
+void ABlackJack_PlayerController::DealerEnds_Implementation()
 {
 	DetermineWinners();
 
@@ -179,18 +212,20 @@ void ABlackJack_PlayerController::DealerEnds()
 }
 
 //reset
-void ABlackJack_PlayerController::StartGame()
+void ABlackJack_PlayerController::StartGame_Implementation()
 {
 	CurrentCard = 0;
 	//TODO: event dispatcher to clear hand
-	//Shuffle Array
-	DealCards();
+	
+	ShuffleArray(CardDeck);
 	CurrentPlayerIndex = -1;
-	EndTurn();
+	EndTurn_Implementation();
+
+	DealCards();
 }
 
 //
-void ABlackJack_PlayerController::EndTurn()
+void ABlackJack_PlayerController::EndTurn_Implementation()
 {
 	if (CurrentPlayerIndex > NumPlayers) //don't execute if dealer player calls, do we need this?
 	{

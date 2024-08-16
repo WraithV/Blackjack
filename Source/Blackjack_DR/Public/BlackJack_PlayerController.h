@@ -12,6 +12,8 @@
 
 #include "Kismet/GameplayStatics.h"
 
+#include"BlackJackBoard.h"
+
 #include "BlackJack_PlayerController.generated.h"
 
 /**
@@ -33,24 +35,30 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<class ABlackJack_Pawn*> PlayerList;
 
+	//Data table with cards
 	UPROPERTY(EditAnywhere)
 	TArray<class ACard*> CardDeck;
 
 	UPROPERTY(EditAnywhere)
-	UDataTable* CardDataTable; //TODO: set this in UE class
-
-	//Data table deck
+	UDataTable* CardDataTable;
+	
 	UPROPERTY(EditAnywhere)
 	ABlackJack_Pawn* CurrentPlayer;
 	UPROPERTY(EditAnywhere)
 	ABlackJack_Pawn* DealerPawn;
 
-	//Main widget
-	//list of player hand widgets - TODO: move this elsewhere
+	//Game Board Class
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UBlackJackBoard> UIClass;
+
+	UPROPERTY()
+	UBlackJackBoard* GameBoard;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	//virtual void InitGame();
@@ -61,10 +69,12 @@ public:
 	virtual void DealCards();
 	virtual void DetermineWinners();
 
-	virtual void PlayerHit() override;
-	virtual void PlayerStand() override;
-	virtual void DealerEnds() override;
-	virtual void StartGame() override;
-	virtual void EndTurn() override;
+	virtual void ShuffleArray(TArray<ACard*>& myArray);
+
+	void PlayerHit_Implementation() override;
+	void PlayerStand_Implementation() override;
+	void DealerEnds_Implementation() override;
+	void StartGame_Implementation() override;
+	void EndTurn_Implementation() override;
 	
 };

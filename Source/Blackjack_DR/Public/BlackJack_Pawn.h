@@ -8,6 +8,8 @@
 #include "Card.h"
 #include "CardAce.h"
 
+#include "PlayerHand.h"
+
 #include "BlackJack_Pawn.generated.h"
 
 UCLASS()
@@ -19,24 +21,29 @@ public:
 	// Sets default values for this pawn's properties
 	ABlackJack_Pawn();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int PlayerScore;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int WinScore = 21;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString PlayerName;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString PlayerStatus;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class ACard*> PlayerHand; //Card Actors
 
-	TSubclassOf<UUserWidget> WPlayerHand; //Widget connected to this player
+	//Widgets
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UUserWidget> HandWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UUserWidget* WPlayerHandWidget; //Widget connected to this player
 
 	//Dealer Variables
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsDealer = false;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int DealerMin = 17;
 
 

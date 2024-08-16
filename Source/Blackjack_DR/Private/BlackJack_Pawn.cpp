@@ -59,6 +59,7 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 		}
 		
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Tempscore = %i"), TempScore));
 	PlayerScore = TempScore + AceScore;
 	//TODO: update widget
 
@@ -74,6 +75,8 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 
 		return false;
 	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Score = %i"), *PlayerName, PlayerScore));
 
 	return true;
 }
@@ -95,6 +98,9 @@ void ABlackJack_Pawn::resetPlayer()
 void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 {
 	PlayerHand.Add(NewCard);
+
+	NewCard->FaceUp = IsFaceUp;
+
 	//TODO: add card widget
 
 	if (IsFaceUp)
