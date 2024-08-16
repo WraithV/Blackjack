@@ -3,6 +3,7 @@
 #include "BlackJack_PlayerController.h"
 
 #include "FCardData.h"
+#include "PlayerStatus.h"
 
 #include "BlackJackBoard.h"
 #include "Blueprint/UserWidget.h"
@@ -148,7 +149,6 @@ void ABlackJack_PlayerController::DetermineWinners()
 
 		if (CurrentPawn->IsDealer)
 		{
-			CurrentPawn->SendStatus("");
 			return; //don't update dealers status
 		}
 		if (CurrentPawn->PlayerScore < 0)
@@ -160,16 +160,16 @@ void ABlackJack_PlayerController::DetermineWinners()
 		//Calculate score for players still in
 		if (CurrentPawn->PlayerScore > DealerScore)
 		{
-			CurrentPawn->SendStatus("WINNER!");
+			CurrentPawn->SendStatus(EPlayerStatus::Winner);
 
 		}
 		else if (CurrentPawn->PlayerScore == DealerScore)
 		{
-			CurrentPawn->SendStatus("Tie");
+			CurrentPawn->SendStatus(EPlayerStatus::Tie);
 		}
 		else
 		{
-			CurrentPawn->SendStatus("Bad Luck");
+			CurrentPawn->SendStatus(EPlayerStatus::Loser);
 		}
 	}
 

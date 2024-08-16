@@ -16,14 +16,15 @@ class BLACKJACK_DR_API UPlayerHand : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
 	void AddCardToHand(UPARAM(ref) FString& NameString, UPARAM(ref) bool& IsFaceUp);
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
 	void FlipCards();
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
 	void Resethand();
-	UFUNCTION(BlueprintNativeEvent, Category = "BlackJack")
-	void UpdatePlayerStatus(UPARAM(ref)FString& NewStatus);
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
+	void UpdatePlayerStatus(UPARAM(ref)EPlayerStatus& NewStatus);
+	//void UpdatePlayerStatus(UPARAM(ref)FString& NewStatus);
+	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
 	void UpdatePlayerScore(int NewScore);
 };

@@ -29,10 +29,10 @@ public:
 
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Game Board")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Game Board")
 	void CreatePlayerHandWidgets(ABlackJack_Pawn* CurrentPlayer, UPARAM(ref) int& index);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Game Board")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Game Board")
 	void RoundFinished();
 
 };

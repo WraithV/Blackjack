@@ -113,7 +113,7 @@ void ABlackJack_Pawn::Tick(float DeltaTime)
 
 void ABlackJack_Pawn::StartPlaying()
 {
-	SendStatus("Playing");
+	SendStatus(EPlayerStatus::Playing);
 
 	CalculatePlayerScore();
 
@@ -127,7 +127,7 @@ void ABlackJack_Pawn::resetPlayer()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("fired delegate 2")));
 
-	SendStatus("Waiting");
+	SendStatus(EPlayerStatus::Waiting);
 
 	PlayerScore = 0;
 	PlayerHand.Empty();
@@ -154,16 +154,11 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 //Player stands
 void ABlackJack_Pawn::PlayerStands()
 {
-	SendStatus("Stand");
+	SendStatus(EPlayerStatus::Stand);
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Stands"), *PlayerName));
 
 }
-
-
-
-
-
 
 //Player score over winScore and has bust
 void ABlackJack_Pawn::PlayerBust()
@@ -174,7 +169,7 @@ void ABlackJack_Pawn::PlayerBust()
 
 	WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
 
-	SendStatus("BUST!");
+	SendStatus(EPlayerStatus::Bust);
 
 	IBlackjackActions::Execute_EndTurn(this->GetController());
 
@@ -214,9 +209,11 @@ void ABlackJack_Pawn::DealerPlay()
 }
 
 //Update Player status text field on widget
-void ABlackJack_Pawn::SendStatus(FString message)
+void ABlackJack_Pawn::SendStatus(EPlayerStatus status)
 {
-	WPlayerHandWidget->UpdatePlayerStatus(message);
+	CurrentStatus = status;
+
+	WPlayerHandWidget->UpdatePlayerStatus(status);
 
 }
 

@@ -9,6 +9,7 @@
 #include "CardAce.h"
 
 #include "PlayerHand.h"
+#include "PlayerStatus.h"
 //#include "BlackJack_PlayerController.h"
 
 #include "BlackJack_Pawn.generated.h"
@@ -30,6 +31,8 @@ public:
 	FString PlayerName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString PlayerStatus;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EPlayerStatus CurrentStatus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class ACard*> PlayerHand; //Card Actors
@@ -70,7 +73,7 @@ public:
 	virtual void PlayerBust();
 	virtual void DealerPlay();
 
-	virtual void SendStatus(FString message);
+	virtual void SendStatus(EPlayerStatus status);
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

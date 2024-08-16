@@ -7,22 +7,22 @@
 //{
 //}
 
-void UPlayerHand::AddCardToHand_Implementation(UPARAM(ref)FString& NameString, UPARAM(ref) bool& IsFaceUp)
-{
-}
-
-void UPlayerHand::FlipCards_Implementation()
-{
-}
-
-void UPlayerHand::Resethand_Implementation()
-{
-}
-
-void UPlayerHand::UpdatePlayerStatus_Implementation(UPARAM(ref)FString& NewStatus)
-{
-}
-
-void UPlayerHand::UpdatePlayerScore_Implementation(int NewScore)
-{
-}
+//void UPlayerHand::AddCardToHand_Implementation(UPARAM(ref)FString& NameString, UPARAM(ref) bool& IsFaceUp)
+//{
+//}
+//
+//void UPlayerHand::FlipCards_Implementation()
+//{
+//}
+//
+//void UPlayerHand::Resethand_Implementation()
+//{
+//}
+//
+//void UPlayerHand::UpdatePlayerStatus_Implementation(UPARAM(ref)FString& NewStatus)
+//{
+//}
+//
+//void UPlayerHand::UpdatePlayerScore_Implementation(int NewScore)
+//{
+//}

@@ -3,10 +3,10 @@
 
 #include "BlackJackBoard.h"
 
-void UBlackJackBoard::CreatePlayerHandWidgets_Implementation(ABlackJack_Pawn* CurrentPlayer, UPARAM(ref) int& index)
-{
-}
-
-void UBlackJackBoard::RoundFinished_Implementation()
-{
-}
+//void UBlackJackBoard::CreatePlayerHandWidgets_Implementation(ABlackJack_Pawn* CurrentPlayer, UPARAM(ref) int& index)
+//{
+//}
+//
+//void UBlackJackBoard::RoundFinished_Implementation()
+//{
+//}
