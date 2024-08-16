@@ -51,17 +51,14 @@ public:
 	int DealerMin = 17;
 
 private:
-	virtual void ClearHand();
 
 protected:
-	// Called when the game starts or when spawned
-	//virtual void BeginPlay() override;
 
 	virtual bool CalculatePlayerScore();
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void SetupDelegates();

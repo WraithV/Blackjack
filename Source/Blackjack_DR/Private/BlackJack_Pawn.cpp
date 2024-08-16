@@ -3,7 +3,6 @@
 #include "BlackJack_Pawn.h"
 
 #include "IBlackjackActions.h"
-//#include "GameFramework/PlayerController.h"
 
 #include "BlackJack_PlayerController.h"
 
@@ -18,16 +17,7 @@ ABlackJack_Pawn::ABlackJack_Pawn()
 
 }
 
-void ABlackJack_Pawn::ClearHand()
-{
-}
-
-//// Called when the game starts or when spawned
-//void ABlackJack_Pawn::BeginPlay()
-//{
-//	
-//}
-
+//TODO:Unused remove
 void ABlackJack_Pawn::SetupDelegates()
 {
 	//APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -43,7 +33,9 @@ void ABlackJack_Pawn::SetupDelegates()
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Bound delegate for %s"), *PlayerName));
 }
 
-
+/*Add up all non ace cards then reduce ace card value until the score is under WinScore or out of ace cards
+* Returns false if at or over 21, true if the player is able to continue playing
+*/
 bool ABlackJack_Pawn::CalculatePlayerScore()
 {
 	int TempScore = 0;
@@ -81,7 +73,6 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 		}
 		
 	}
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Tempscore = %i"), TempScore));
 	PlayerScore = TempScore + AceScore;
 
 	WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
@@ -99,17 +90,15 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 		return false;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Score = %i"), *PlayerName, PlayerScore));
-
 	return true;
 }
 
 // Called every frame
-void ABlackJack_Pawn::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
+//void ABlackJack_Pawn::Tick(float DeltaTime)
+//{
+//	Super::Tick(DeltaTime);
+//
+//}
 
 void ABlackJack_Pawn::StartPlaying()
 {
@@ -122,20 +111,19 @@ void ABlackJack_Pawn::StartPlaying()
 		DealerPlay();
 	}
 }
-
+//Reset Player in preparation for a new round
 void ABlackJack_Pawn::resetPlayer()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("fired delegate 2")));
-
 	SendStatus(EPlayerStatus::Waiting);
 
 	PlayerScore = 0;
 	PlayerHand.Empty();
 
 	WPlayerHandWidget->Resethand();
-
 }
 
+/*Add New card actor to the players hand either face down (value hidden) or face up
+*/
 void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 {
 	PlayerHand.Add(NewCard);
@@ -151,16 +139,14 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 
 }
 
-//Player stands
+//Update the players status to Stand
 void ABlackJack_Pawn::PlayerStands()
 {
 	SendStatus(EPlayerStatus::Stand);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Stands"), *PlayerName));
-
 }
 
-//Player score over winScore and has bust
+//Player score is > winScore and ends their turn with a loss
 void ABlackJack_Pawn::PlayerBust()
 {
 	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -172,10 +158,9 @@ void ABlackJack_Pawn::PlayerBust()
 	SendStatus(EPlayerStatus::Bust);
 
 	IBlackjackActions::Execute_EndTurn(this->GetController());
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Busts"), *PlayerName));
 }
 
+//Dealer continues hitting until over DealerMin or Busts
 void ABlackJack_Pawn::DealerPlay()
 {
 	if (!WPlayerHandWidget)
@@ -183,10 +168,6 @@ void ABlackJack_Pawn::DealerPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("no pawn for dealer")));
 	}
 	WPlayerHandWidget->FlipCards();
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Dealer Plays")));
-
-	//APlayerController* controller = this->GetController()
 
 	if (!CalculatePlayerScore() || PlayerScore >= DealerMin) //End turn if dealer is over DealerMin score
 	{
