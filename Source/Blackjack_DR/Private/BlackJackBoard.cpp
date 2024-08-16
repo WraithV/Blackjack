@@ -3,7 +3,7 @@
 
 #include "BlackJackBoard.h"
 
-void UBlackJackBoard::CreatePlayerHandWidgets_Implementation(ABlackJack_Pawn* CurrentPlayer, int index)
+void UBlackJackBoard::CreatePlayerHandWidgets_Implementation(ABlackJack_Pawn* CurrentPlayer, UPARAM(ref) int& index)
 {
 
 	//for(ABlackJack_Pawn* CurrentPlayer : AllPlayers)

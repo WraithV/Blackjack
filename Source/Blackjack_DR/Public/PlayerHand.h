@@ -16,9 +16,8 @@ class BLACKJACK_DR_API UPlayerHand : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	//virtual void AddCardToHand(FString Value, bool IsFaceUp);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	void AddCardToHand(UPARAM(ref) FString& NameString, UPARAM(ref) bool& IsFaceUp);
 
 	//virtual void Resethand();
-	/*PlayerHand();
-	~PlayerHand();*/
 };

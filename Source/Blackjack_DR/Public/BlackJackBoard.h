@@ -30,7 +30,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Game Board")
-	void CreatePlayerHandWidgets(ABlackJack_Pawn* CurrentPlayer, int index);
+	void CreatePlayerHandWidgets(ABlackJack_Pawn* CurrentPlayer, UPARAM(ref) int& index);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Game Board")
 	void RoundFinished();

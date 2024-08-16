@@ -35,10 +35,10 @@ public:
 
 	//Widgets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UUserWidget> HandWidgetClass;
+	TSubclassOf<class UPlayerHand> HandWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UUserWidget* WPlayerHandWidget; //Widget connected to this player
+	UPlayerHand* WPlayerHandWidget; //Widget connected to this player
 
 	//Dealer Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

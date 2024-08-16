@@ -1,7 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "IBlackjackActions.h"
+//#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "BlackJack_Pawn.h"
+
+
 
 // Sets default values
 ABlackJack_Pawn::ABlackJack_Pawn()
@@ -59,8 +64,13 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 		}
 		
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Tempscore = %i"), TempScore));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Tempscore = %i"), TempScore));
 	PlayerScore = TempScore + AceScore;
+
+
+
+	//ACardAce* CardAsAce = Cast<HandWidgetClass>(WPlayerHandWidget);
+
 	//TODO: update widget
 
 	if (PlayerScore > WinScore) //score still over, player busts
@@ -101,6 +111,8 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 
 	NewCard->FaceUp = IsFaceUp;
 
+	WPlayerHandWidget->AddCardToHand(NewCard->CardName, IsFaceUp);
+
 	//TODO: add card widget
 
 	if (IsFaceUp)
@@ -113,40 +125,74 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 //Player stands
 void ABlackJack_Pawn::PlayerStands()
 {
+	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
+	{
+		IBlackjackActions::Execute_PlayerStand(controller);
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Stands"), *PlayerName));
+
 	//TODO: widget update player status: Stand
-	//TODO: call interface ending turn
 }
 
 //Player score over winScore and has bust
 void ABlackJack_Pawn::PlayerBust()
 {
+	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
 	//TODO: widget update player status: BUST!
+
 	PlayerScore = -1;
-	//TODO: call interface ending turn
+
+	if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
+	{
+		IBlackjackActions::Execute_EndTurn(controller);
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%s Busts"), *PlayerName));
 }
 
 void ABlackJack_Pawn::DealerPlay()
 {
-	//TODO: Flipcard
+	//TODO: widget Flipcard
 
-	if (!CalculatePlayerScore())
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Dealer Plays")));
+
+	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (!CalculatePlayerScore()) //End turn if dealer is over DealerMax
 	{
-		//TODO: call dealer ends interface
+		if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
+		{
+			IBlackjackActions::Execute_DealerEnds(controller);
+		}
+
 	}
 	if (PlayerScore >= DealerMin)
 	{
-		//TODO: call dealer ends interface
+		if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
+		{
+			IBlackjackActions::Execute_DealerEnds(controller);
+		}
 	}
 	//deal until dealer hits his max or busts
 	for (int i = 0; i < 10; i++)
 	{
-		//TODO: call player hit interface
+		if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
+		{
+			IBlackjackActions::Execute_PlayerHit(controller);
+		}
+
 		if (!CalculatePlayerScore() || PlayerScore >= DealerMin)
 		{
 			break;
 		}
 	}
-	//TODO: call dealer ends interface
+
+	if (controller->GetClass()->ImplementsInterface(UBlackjackActions::StaticClass()))
+	{
+		IBlackjackActions::Execute_DealerEnds(controller);
+	}
 }
 
 // Called to bind functionality to input
