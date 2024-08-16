@@ -155,15 +155,19 @@ void ABlackJack_PlayerController::DetermineWinners()
 		//Calculate score for players still in
 		if (CurrentPawn->PlayerScore > DealerScore)
 		{
+			CurrentPawn->SendStatus("WINNER!");
+
 			//TODO: update feedback
 			//player WINS
 		}
 		else if (CurrentPawn->PlayerScore == DealerScore)
 		{
+			CurrentPawn->SendStatus("TIE");
 			//player TIES
 		}
 		else
 		{
+			CurrentPawn->SendStatus("Loser");
 			//player loses
 		}
 	}
@@ -198,6 +202,8 @@ void ABlackJack_PlayerController::PlayerHit_Implementation()
 
 void ABlackJack_PlayerController::PlayerStand_Implementation()
 {
+	CurrentPlayer->PlayerStands();
+
 	EndTurn_Implementation();
 	//end turn
 }
@@ -218,8 +224,13 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 	//TODO: event dispatcher to clear hand
 	
 	ShuffleArray(CardDeck);
-	CurrentPlayerIndex = -1;
-	EndTurn_Implementation();
+	CurrentPlayerIndex = 0;
+	CurrentPlayer = PlayerList[CurrentPlayerIndex];
+
+	this->UnPossess();
+	this->Possess(CurrentPlayer);
+	CurrentPlayer->StartPlaying();
+	//EndTurn_Implementation();
 
 	DealCards();
 }
@@ -227,24 +238,18 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 //
 void ABlackJack_PlayerController::EndTurn_Implementation()
 {
-	if (CurrentPlayerIndex > NumPlayers) //don't execute if dealer player calls, do we need this?
+	if (CurrentPlayer->IsDealer) //don't execute if dealer player calls, do we need this?
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("DEALER CALLED ENDTURN")));
 		return;
 	}
 	CurrentPlayerIndex++;
 
 	CurrentPlayer = PlayerList[CurrentPlayerIndex];
-	if (!CurrentPlayer->IsDealer)
-	{
-		APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		controller->UnPossess();
-		controller->Possess(CurrentPlayer);
 
-		//TODO: update widget/message that its this players turn
-	}
-	else
-	{
-		CurrentPlayer->DealerPlay();
-	}
+	this->UnPossess();
+	this->Possess(CurrentPlayer);
+
+	CurrentPlayer->StartPlaying();
 
 }

@@ -18,6 +18,12 @@ class BLACKJACK_DR_API UPlayerHand : public UUserWidget
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
 	void AddCardToHand(UPARAM(ref) FString& NameString, UPARAM(ref) bool& IsFaceUp);
-
-	//virtual void Resethand();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	void FlipCards();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	void Resethand();
+	UFUNCTION(BlueprintNativeEvent, Category = "BlackJack")
+	void UpdatePlayerStatus(UPARAM(ref)FString& NewStatus);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BlackJack")
+	void UpdatePlayerScore(int NewScore);
 };

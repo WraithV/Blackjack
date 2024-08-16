@@ -57,12 +57,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void StartPlaying();
 	virtual void resetPlayer();
 	virtual void PlayerAddCard(ACard* NewCard, bool IsFaceUp);
 	virtual void PlayerStands();
 	virtual void PlayerBust();
-
 	virtual void DealerPlay();
+
+	virtual void SendStatus(FString message);
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
