@@ -23,19 +23,18 @@ public:
 	// Sets default values for this pawn's properties
 	ABlackJack_Pawn();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int PlayerScore;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int WinScore = 21;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString PlayerName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString PlayerStatus;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	const int WinScore = 21;
+	const int DealerMin = 17;
+
 	EPlayerStatus CurrentStatus;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class ACard*> PlayerHand; //Card Actors
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int PlayerScore;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString PlayerName;
 
 	//Widgets
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -45,10 +44,8 @@ public:
 	UPlayerHand* WPlayerHandWidget; //Widget connected to this player
 
 	//Dealer Variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsDealer = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int DealerMin = 17;
+
 
 private:
 
