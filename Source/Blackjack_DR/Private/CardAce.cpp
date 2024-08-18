@@ -15,3 +15,8 @@ bool ACardAce::ReduceValue()
 	CardValue = 1;
 	return true;
 }
+
+void ACardAce::ResetAceValue()
+{
+	CardValue = 11;
+}

@@ -17,9 +17,11 @@ class BLACKJACK_DR_API ACard : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACard();
-
+	UPROPERTY(EditAnywhere)
 	int CardValue = 0;
+	UPROPERTY(EditAnywhere)
 	FString CardName = "";
+	UPROPERTY(EditAnywhere)
 	bool FaceUp = true;
 
 public:	

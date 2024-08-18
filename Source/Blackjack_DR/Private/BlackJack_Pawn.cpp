@@ -18,7 +18,7 @@ ABlackJack_Pawn::ABlackJack_Pawn()
 }
 
 /*Add up all non ace cards then reduce ace card value until the score is under WinScore or out of ace cards
-* Returns the final score
+* @return ProcessedScore: the new player score
 */
 int ABlackJack_Pawn::ProcessScore()
 {
@@ -41,8 +41,10 @@ int ABlackJack_Pawn::ProcessScore()
 		{
 			TempScore += Card->GetCardValue();
 		}
+
+
 	}
-	//reduce ace values till below 21 or out of aces
+	//reduce ace values till below the WinScore or out of aces
 	if (TempScore + AceScore > WinScore)
 	{
 		for (ACardAce* AceItem : AceArray)
@@ -51,6 +53,7 @@ int ABlackJack_Pawn::ProcessScore()
 			{
 				AceScore -= 10;
 			}
+			
 			if (TempScore + AceScore <= WinScore)
 			{
 				break;
@@ -60,22 +63,22 @@ int ABlackJack_Pawn::ProcessScore()
 
 	ProcessedScore = TempScore + AceScore;
 
-	PlayerScore = ProcessedScore;
-
 	return ProcessedScore;
 }
 
 
-/*Determine if this player can continue playing, returns true if player hasn't bust or hit WinScore
+/*Determine if this player can continue playing
 * Dealer player will stand (not continue) if over 17 and not bust
+* @param Score: value used to determine if the player can continue their turn
+* @return true if players score is less than the winScore
 */
 bool ABlackJack_Pawn::PlayerContinueTurn(int score)
 {
 	if (IsDealer)
 	{
-		if (score > DealerMin && score <= WinScore)
+		if (score >= DealerMin && score <= WinScore)
 		{
-			PlayerStands();
+			IBlackjackActions::Execute_PlayerStand(this->GetController());
 			return false;
 		}
 	}
@@ -88,7 +91,7 @@ bool ABlackJack_Pawn::PlayerContinueTurn(int score)
 	}
 	else if (score == WinScore) //score equals winscore, automatically stands
 	{
-		PlayerStands();
+		IBlackjackActions::Execute_PlayerStand(this->GetController());
 
 		return false;
 	}
@@ -142,7 +145,6 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 void ABlackJack_Pawn::PlayerStands()
 {
 	SendStatus(EPlayerStatus::Stand);
-
 }
 
 //Player score is > winScore and ends their turn with a loss
@@ -152,8 +154,6 @@ void ABlackJack_Pawn::PlayerBust()
 
 	PlayerScore = -1;
 
-	//WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
-
 	SendStatus(EPlayerStatus::Bust);
 
 	IBlackjackActions::Execute_EndTurn(this->GetController());
@@ -162,6 +162,8 @@ void ABlackJack_Pawn::PlayerBust()
 //Dealer continues hitting until over DealerMin or Busts
 void ABlackJack_Pawn::DealerPlay()
 {
+	bool continuePlaying = true;
+
 	//Flip all cards in the dealers hand
 	for (ACard* card : PlayerHand)
 	{
@@ -170,12 +172,17 @@ void ABlackJack_Pawn::DealerPlay()
 
 	WPlayerHandWidget->FlipCards(); //Make flipped cards value visible on the cards widget
 
-	bool continuePlaying = true;
-
+	
 	while (continuePlaying)
 	{
-		IBlackjackActions::Execute_PlayerHit(this->GetController());
-		continuePlaying = PlayerContinueTurn(ProcessScore());
+		PlayerScore = ProcessScore();
+		WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
+		continuePlaying = PlayerContinueTurn(PlayerScore);
+		if (continuePlaying)
+		{
+			IBlackjackActions::Execute_PlayerHit(this->GetController());
+		}
+		
 	}
 
 	IBlackjackActions::Execute_DealerEnds(this->GetController());

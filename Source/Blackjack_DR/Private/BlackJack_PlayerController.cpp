@@ -20,11 +20,11 @@ void ABlackJack_PlayerController::BeginPlay()
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
 
-	ABlackJack_Pawn* NewPawn;
+	
 
 	for(int i = 0; i < (NumPlayers + 1); i++)
 	{
-		NewPawn = GetWorld()->SpawnActor<ABlackJack_Pawn>(Location, Rotation, SpawnInfo);
+		ABlackJack_Pawn* NewPawn = GetWorld()->SpawnActor<ABlackJack_Pawn>(Location, Rotation, SpawnInfo);
 
 		PlayerList.Add(NewPawn);
 
@@ -79,9 +79,12 @@ void ABlackJack_PlayerController::SpawnCardActor(int Value, FString Name)
 	ACard* NewCard;
 
 
-	if (Name == "A") //If is ace card
+	if (Name == "A") //If ace card
 	{
 		NewCard = GetWorld()->SpawnActor<ACardAce>(Location, Rotation, SpawnInfo);
+
+		AceCards.Add(Cast<ACardAce>(NewCard));
+
 	}
 	else
 	{
@@ -127,8 +130,7 @@ void ABlackJack_PlayerController::DealCards()
 			{
 				faceUp = false;
 			}
-
-			
+			UE_LOG(LogTemp, Warning, TEXT("card num %i"), CurrentCard);
 			CurrentPawn->PlayerAddCard(CardDeck[CurrentCard], faceUp);
 			CurrentCard++;
 		}
@@ -146,9 +148,6 @@ void ABlackJack_PlayerController::DetermineWinners()
 	int DealerScore = DealerPawn->PlayerScore;
 	for (ABlackJack_Pawn* players : PlayerList)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("run"));
-		UE_LOG(LogTemp, Warning, TEXT("%i"), PlayerList.Num());
-
 		if (players->IsDealer)
 		{
 			continue; //don't update dealers status
@@ -235,6 +234,10 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 		PlayerList[i]->resetPlayer();
 	}
 
+	for (ACardAce* Aces : AceCards) //Reset any ace cards which were reduced in the previous round
+	{
+		Aces->ResetAceValue();
+	}
 	
 	ShuffleArray(CardDeck);
 	CurrentPlayerIndex = 0;

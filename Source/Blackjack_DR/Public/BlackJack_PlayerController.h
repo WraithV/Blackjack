@@ -40,6 +40,7 @@ public:
 	int CurrentCard = 0;
 	TArray<class ACard*> CardDeck; //list of cards, will be shuffled	
 
+	TArray<class ACardAce*> AceCards;
 
 	UPROPERTY(EditAnywhere)
 	UDataTable* CardDataTable;
