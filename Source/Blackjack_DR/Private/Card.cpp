@@ -11,14 +11,7 @@ ACard::ACard()
 
 }
 
-// Called when the game starts or when spawned
-void ACard::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-//Hide the card value until it is revealed
+//Hide the card value until it is FaceUp
 int ACard::GetCardValue()
 {
 	if (FaceUp)
@@ -27,20 +20,6 @@ int ACard::GetCardValue()
 	}
 
 	return 0;
-}
-
-// Called every frame - not needed for this class. pls remove
-void ACard::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	//Need to disable tick
-
-	//if (GEngine)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Green, FString::Printf(TEXT("%s"), *CardName));
-	//}
-
 }
 
 //Initialise card values

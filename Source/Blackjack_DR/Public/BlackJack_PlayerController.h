@@ -19,31 +19,31 @@
 //UDELEGATE()
 //DECLARE_MULTICAST_DELEGATE(FAllDiscard);
 
-/**
- * 
- */
+/** Responsible for setting up and managing most game aspects including
+* The deck, turn order and scoring
+* This single player controller possess pawns in turn
+* Implements IBlackjackActions to execute gameplay functionality
+*/
 UCLASS()
 class BLACKJACK_DR_API ABlackJack_PlayerController : public APlayerController, public IBlackjackActions
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
-	int NumPlayers = 3;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
+	int NumPlayers = 3; //Max Players 3
 	int CurrentPlayerIndex; //TODO: do we need this as well as currentPlayer?
-	UPROPERTY(EditAnywhere)
-	int CurrentCard = 0;
 
-	UPROPERTY(EditAnywhere)
 	TArray<class ABlackJack_Pawn*> PlayerList;
 
-	//Data table with cards
-	UPROPERTY(EditAnywhere)
-	TArray<class ACard*> CardDeck;
+	//Card Variables
+	int CurrentCard = 0;
+	TArray<class ACard*> CardDeck; //list of cards, will be shuffled	
+
 
 	UPROPERTY(EditAnywhere)
 	UDataTable* CardDataTable;
+
 	
 	UPROPERTY(EditAnywhere)
 	ABlackJack_Pawn* CurrentPlayer;
