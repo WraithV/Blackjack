@@ -4,7 +4,7 @@
 #include "CardAce.h"
 
 
-//Reduce Value of Ace card if it has not been done already
+//Reduce Value of Ace card if it has not been done so already
 bool ACardAce::ReduceValue()
 {
 	if (CardValue == 1)

@@ -99,6 +99,8 @@ void ABlackJack_Pawn::resetPlayer()
 }
 
 /*Add New card actor to the players hand either face down (value hidden) or face up
+* @param NewCard: Pointer to the Cards Actor
+* @param IsFaceUp: true if card is dealt face up
 */
 void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 {
@@ -152,6 +154,11 @@ void ABlackJack_Pawn::DealerPlay()
 	{
 		if (!CalculatePlayerScore() || PlayerScore >= DealerMin)
 		{
+			if (CurrentStatus == EPlayerStatus::Playing)
+			{
+				PlayerStands();
+			}
+
 			break;
 		}
 
@@ -161,7 +168,10 @@ void ABlackJack_Pawn::DealerPlay()
 	IBlackjackActions::Execute_DealerEnds(this->GetController());
 }
 
-//Update Player status text field on widget
+
+/*Update Player status text field on widget
+* @Param status: New status to update on the Pawns widget
+*/
 void ABlackJack_Pawn::SendStatus(EPlayerStatus status)
 {
 	CurrentStatus = status;
@@ -169,6 +179,7 @@ void ABlackJack_Pawn::SendStatus(EPlayerStatus status)
 	WPlayerHandWidget->UpdatePlayerStatus(status);
 
 }
+
 
 // Called to bind functionality to input
 void ABlackJack_Pawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

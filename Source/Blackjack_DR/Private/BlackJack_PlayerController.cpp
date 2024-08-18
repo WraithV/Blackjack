@@ -8,7 +8,10 @@
 #include "BlackJackBoard.h"
 #include "Blueprint/UserWidget.h"
 
-//Spawn Players
+
+/* Spawn Pawns for each player up to a maximum of 3 players (excluding the dealer)
+* Also setup the last player as the dealer
+*/
 void ABlackJack_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -63,7 +66,10 @@ void ABlackJack_PlayerController::BeginPlay()
 
 }
 
-//Spawn Card Actor and initialize values
+/*Spawn ACard Actors and ACardAce actors if the Name is equal to "A"
+* @param Value: value of the card
+* @param Name: Name on the Card
+*/
 void ABlackJack_PlayerController::SpawnCardActor(int Value, FString Name)
 {
 	FVector Location(0.0f, 0.0f, 0.0f);
@@ -87,7 +93,7 @@ void ABlackJack_PlayerController::SpawnCardActor(int Value, FString Name)
 
 }
 
-//
+//Loop through CardDataTable once per suit (4x) and spawn the ACard Actors
 void ABlackJack_PlayerController::CreateCardDeck()
 {
 	//Spawn numbered cards from each suit
@@ -127,7 +133,10 @@ void ABlackJack_PlayerController::DealCards()
 	}
 }
 
-
+/* Compare player scores against the dealer to determine winners in this round
+* Don't update the dealer player or any players who have bust
+* Update status on remaining players
+*/
 void ABlackJack_PlayerController::DetermineWinners()
 {
 	int DealerScore = DealerPawn->PlayerScore;
@@ -162,18 +171,20 @@ void ABlackJack_PlayerController::DetermineWinners()
 
 }
 
-//Shuffle the Cards
-void ABlackJack_PlayerController::ShuffleArray(TArray<ACard*>& myArray)
+/* Randomly shuffle the deck of cards
+* @param CardArray: Array of ACard Actors
+*/
+void ABlackJack_PlayerController::ShuffleArray(TArray<ACard*>& CardArray)
 {
-	if (myArray.Num() > 0)
+	if (CardArray.Num() > 0)
 	{
-		int32 LastIndex = myArray.Num() - 1;
+		int32 LastIndex = CardArray.Num() - 1;
 		for (int32 i = 0; i <= LastIndex; ++i)
 		{
 			int32 Index = FMath::RandRange(i, LastIndex);
 			if (i != Index)
 			{
-				myArray.Swap(i, Index);
+				CardArray.Swap(i, Index);
 			}
 		}
 	}
@@ -188,6 +199,7 @@ void ABlackJack_PlayerController::PlayerHit_Implementation()
 	CurrentCard++;
 }
 
+//Update player status to 'Stand' and end the players turn
 void ABlackJack_PlayerController::PlayerStand_Implementation()
 {
 	CurrentPlayer->PlayerStands();
@@ -196,6 +208,7 @@ void ABlackJack_PlayerController::PlayerStand_Implementation()
 	//end turn
 }
 
+//Called by the dealer player hitting their limit or bust, determine winner of the rounds and update the UI so players can begin a new round
 void ABlackJack_PlayerController::DealerEnds_Implementation()
 {
 	DetermineWinners();
@@ -204,7 +217,7 @@ void ABlackJack_PlayerController::DealerEnds_Implementation()
 
 }
 
-//reset
+//Reset players, shuffle cards, deal cards and possess first Player Pawn
 void ABlackJack_PlayerController::StartGame_Implementation()
 {
 	CurrentCard = 0;
@@ -214,14 +227,6 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 		PlayerList[i]->resetPlayer();
 	}
 
-
-	//DiscardCards.Broadcast();
-
-	//CALL DELEGATE
-
-	//TODO: Declare delegate
-	// 
-	//TODO: event dispatcher to clear hand
 	
 	ShuffleArray(CardDeck);
 	CurrentPlayerIndex = 0;
@@ -235,10 +240,12 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 	DealCards();
 }
 
-//
+/*Possess the next player in queue and update their status to 'playing'
+* if called by the dealer player, do nothing
+*/
 void ABlackJack_PlayerController::EndTurn_Implementation()
 {
-	if (CurrentPlayer->IsDealer) //don't execute if dealer player calls, do we need this?
+	if (CurrentPlayer->IsDealer)
 	{
 		return;
 	}

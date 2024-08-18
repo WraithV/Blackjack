@@ -11,7 +11,7 @@ ACard::ACard()
 
 }
 
-//Hide the card value until it is FaceUp
+//If the card is FaceUp return its value, otherwise the card is face down and returns 0
 int ACard::GetCardValue()
 {
 	if (FaceUp)
@@ -22,7 +22,11 @@ int ACard::GetCardValue()
 	return 0;
 }
 
-//Initialise card values
+/* Initialise card values
+* @param NewValue: card value
+* @param Newname: Single character representing the cards Name
+* @param IsCardFaceup: whether the card is dealt face up
+*/
 void ACard::SetupCardValues(int NewValue, FString NewName, bool IsCardFaceup)
 {
 	CardValue = NewValue;
