@@ -10,10 +10,12 @@
 
 #include "PlayerHand.h"
 #include "PlayerStatus.h"
-//#include "BlackJack_PlayerController.h"
 
 #include "BlackJack_Pawn.generated.h"
 
+/** Represents a player in the game
+ * Can be a dealer player if IsDealer is true
+ */
 UCLASS()
 class BLACKJACK_DR_API ABlackJack_Pawn : public APawn
 {
@@ -46,21 +48,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UPlayerHand* WPlayerHandWidget; //Widget connected to this player
 
-	
-
-
 private:
-
-protected:
 
 	virtual bool CalculatePlayerScore();
 
-public:	
-	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
+protected:
 
-	UFUNCTION()
-	void SetupDelegates();
+public:	
 
 	virtual void StartPlaying();
 	virtual void resetPlayer();

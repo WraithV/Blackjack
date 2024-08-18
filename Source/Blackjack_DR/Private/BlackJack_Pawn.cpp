@@ -17,22 +17,6 @@ ABlackJack_Pawn::ABlackJack_Pawn()
 
 }
 
-//TODO:Unused remove
-void ABlackJack_Pawn::SetupDelegates()
-{
-	//APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	//ABlackJack_PlayerController* BJ_PC = Cast<ABlackJack_PlayerController>(controller);
-
-	//BJ_PC->FAllDiscard.AddUObject(this, &ABlackJack_Pawn::resetPlayer);
-
-	////MyDel.BindUFunction(this, FName("DoSomething"));
-
-	////BJ_PC->AllPlayersDiscard.AddDynamic(this, &ABlackJack_Pawn::resetPlayer); //Bind to Delegate
-
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Bound delegate for %s"), *PlayerName));
-}
-
 /*Add up all non ace cards then reduce ace card value until the score is under WinScore or out of ace cards
 * Returns false if at or over 21, true if the player is able to continue playing
 */
@@ -93,11 +77,10 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 	return true;
 }
 
+//Update player status if playing, if Dealer then execute dealer Play
 void ABlackJack_Pawn::StartPlaying()
 {
 	SendStatus(EPlayerStatus::Playing);
-
-	CalculatePlayerScore();
 
 	if (IsDealer)
 	{
@@ -156,25 +139,16 @@ void ABlackJack_Pawn::PlayerBust()
 //Dealer continues hitting until over DealerMin or Busts
 void ABlackJack_Pawn::DealerPlay()
 {
-	if (!WPlayerHandWidget)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("no pawn for dealer")));
-	}
+	//Flip all cards in the dealers hand
 	for (ACard* card : PlayerHand)
 	{
 		card->FaceUp = true;
 	}
 
-	WPlayerHandWidget->FlipCards();
+	WPlayerHandWidget->FlipCards(); //Make flipped cards value visible on the cards widget
 
-	//if (!CalculatePlayerScore() || PlayerScore >= DealerMin) //End turn if dealer is over DealerMin score
-	//{
-
-	//	IBlackjackActions::Execute_DealerEnds(this->GetController());
-
-	//}
 	//deal until dealer hits his max or busts
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 12; i++)
 	{
 		if (!CalculatePlayerScore() || PlayerScore >= DealerMin)
 		{
@@ -202,4 +176,3 @@ void ABlackJack_Pawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-

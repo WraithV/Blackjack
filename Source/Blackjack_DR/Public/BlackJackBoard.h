@@ -11,7 +11,8 @@
 #include "PlayerHand.h"
 
 #include "BlackJackBoard.generated.h"
-/**
+
+/**Widget representing the GameBoard, Implemented in UMG/Widgets
  * 
  */
 UCLASS(Abstract)

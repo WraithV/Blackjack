@@ -8,7 +8,7 @@
 #include "BlackJackBoard.h"
 #include "Blueprint/UserWidget.h"
 
-
+//Spawn Players
 void ABlackJack_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -30,33 +30,31 @@ void ABlackJack_PlayerController::BeginPlay()
 			NewPawn->IsDealer = true;
 			NewPawn->PlayerName = "Dealer";
 			DealerPawn = NewPawn;
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, "Setup Dealer");
 		}
 		else
 		{
 			NewPawn->PlayerName = FString::Printf(TEXT("Player %i"), i);
 
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Setup Player %i"), i));
 		}
-
-		
-		//NewPawn->SetupDelegates();
-
 
 	}
 
-
-
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("created %i"), PlayerList.Num()));
+	if (!CardDataTable)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Card Data table not setup in PlayerController... Exiting"));
+		this->ConsoleCommand("quit");
+	}
+	if (!UIClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UIClass not setup in PlayerController... Exiting"));
+		this->ConsoleCommand("quit");
+	}
 
 	CreateCardDeck();
 
 	GameBoard = CreateWidget<UBlackJackBoard>(this, UIClass);
 	check(GameBoard);
 	GameBoard->AddToPlayerScreen();
-
-
-	//ABlackJack_Pawn* CurrentPawn : PlayerList
 
 	for (int i = 0; i < PlayerList.Num(); i++)
 	{
@@ -83,8 +81,6 @@ void ABlackJack_PlayerController::SpawnCardActor(int Value, FString Name)
 		NewCard = GetWorld()->SpawnActor<ACard>(Location, Rotation, SpawnInfo);
 	}
 
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Setup Player %s"), *Name.ToString()));
-
 	NewCard->SetupCardValues(Value, Name, false);
 
 	CardDeck.Add(NewCard);
@@ -98,20 +94,11 @@ void ABlackJack_PlayerController::CreateCardDeck()
 	for (int suits = 0; suits < 4; suits++)
 	{
 
-		if (!CardDataTable)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("no data table")));
-			continue;
-		}
-
 		for (auto& data : CardDataTable->GetRowMap())
 		{
 			FName name = data.Key;
 
 			FCardData* MyStruct = reinterpret_cast<FCardData*>(data.Value);
-
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Create Card %s"), *MyStruct->CardName));
-			
 
 			SpawnCardActor(MyStruct->CardValue, MyStruct->CardName);
 		}
@@ -253,7 +240,6 @@ void ABlackJack_PlayerController::EndTurn_Implementation()
 {
 	if (CurrentPlayer->IsDealer) //don't execute if dealer player calls, do we need this?
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("DEALER CALLED ENDTURN")));
 		return;
 	}
 	CurrentPlayerIndex++;

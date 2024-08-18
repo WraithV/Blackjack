@@ -7,7 +7,7 @@
 
 #include "PlayerHand.generated.h"
 
-/**
+/** Widget representing the players hand on the table, All functions are implemented in UMG/Widgets but called by c++ functions
  * 
  */
 UCLASS(Abstract)
@@ -23,8 +23,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
 	void Resethand();
 	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
-	void UpdatePlayerStatus(UPARAM(ref)EPlayerStatus& NewStatus);
-	//void UpdatePlayerStatus(UPARAM(ref)FString& NewStatus);
+	void UpdatePlayerStatus(UPARAM(ref) EPlayerStatus& NewStatus);
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "BlackJack")
 	void UpdatePlayerScore(int NewScore);
 };

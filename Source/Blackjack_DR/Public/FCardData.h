@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "FCardData.generated.h"
-/**
+
+
+/** Struct representing 
  * 
  */
 

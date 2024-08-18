@@ -3,11 +3,4 @@
 
 #include "FCardData.h"
 
-//FCardData::FCardData()
-//{
-//	//CardName = "";
-//}
-//
-//FCardData::~FCardData()
-//{
-//}
+//Struct No functionality to implement

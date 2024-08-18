@@ -2,3 +2,5 @@
 
 
 #include "PlayerStatus.h"
+
+//ENUM No functionality

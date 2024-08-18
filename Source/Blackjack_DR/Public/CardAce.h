@@ -6,8 +6,8 @@
 #include "Card.h"
 #include "CardAce.generated.h"
 
-/**
- * 
+/** Child of ACard which represents an Ace card and has additional functionality
+ * Ace cards have a value of 11 by default but are reduced to 1 if the total of the players hand (including aces) exceeds 21
  */
 UCLASS()
 class BLACKJACK_DR_API ACardAce : public ACard
