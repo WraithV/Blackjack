@@ -128,6 +128,7 @@ void ABlackJack_PlayerController::DealCards()
 				faceUp = false;
 			}
 
+			
 			CurrentPawn->PlayerAddCard(CardDeck[CurrentCard], faceUp);
 			CurrentCard++;
 		}
@@ -140,33 +141,38 @@ void ABlackJack_PlayerController::DealCards()
 */
 void ABlackJack_PlayerController::DetermineWinners()
 {
-	int DealerScore = DealerPawn->PlayerScore;
-	for (ABlackJack_Pawn* CurrentPawn : PlayerList)
-	{
+	UE_LOG(LogTemp, Warning, TEXT("The Game ends"));
 
-		if (CurrentPawn->IsDealer)
+	int DealerScore = DealerPawn->PlayerScore;
+	for (ABlackJack_Pawn* players : PlayerList)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("run"));
+		UE_LOG(LogTemp, Warning, TEXT("%i"), PlayerList.Num());
+
+		if (players->IsDealer)
 		{
-			return; //don't update dealers status
+			continue; //don't update dealers status
+			
 		}
-		if (CurrentPawn->PlayerScore < 0)
+		if (players->PlayerScore < 0)
 		{
 			//player is bust, don't update
-			return;
+			continue;
 		}
 
 		//Calculate score for players still in
-		if (CurrentPawn->PlayerScore > DealerScore)
+		if (players->PlayerScore > DealerScore)
 		{
-			CurrentPawn->SendStatus(EPlayerStatus::Winner);
+			players->SendStatus(EPlayerStatus::Winner);
 
 		}
-		else if (CurrentPawn->PlayerScore == DealerScore)
+		else if (players->PlayerScore == DealerScore)
 		{
-			CurrentPawn->SendStatus(EPlayerStatus::Tie);
+			players->SendStatus(EPlayerStatus::Tie);
 		}
 		else
 		{
-			CurrentPawn->SendStatus(EPlayerStatus::Loser);
+			players->SendStatus(EPlayerStatus::Loser);
 		}
 	}
 
@@ -197,6 +203,7 @@ void ABlackJack_PlayerController::ShuffleArray(TArray<ACard*>& CardArray)
 void ABlackJack_PlayerController::PlayerHit_Implementation()
 {
 	CurrentPlayer->PlayerAddCard(CardDeck[CurrentCard], true);
+
 	CurrentCard++;
 }
 

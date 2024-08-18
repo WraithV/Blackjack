@@ -50,8 +50,6 @@ public:
 
 private:
 
-	virtual bool CalculatePlayerScore();
-
 	virtual bool PlayerContinueTurn(int UpdatedScore);
 
 	virtual int ProcessScore();
