@@ -36,7 +36,8 @@ void ABlackJack_PlayerController::BeginPlay()
 		}
 		else
 		{
-			NewPawn->PlayerName = FString::Printf(TEXT("Player %i"), i);
+			int j = i + 1;
+			NewPawn->PlayerName = FString::Printf(TEXT("Player %i"), j);
 
 		}
 
