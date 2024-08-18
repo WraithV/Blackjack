@@ -78,7 +78,10 @@ bool ABlackJack_Pawn::PlayerContinueTurn(int score)
 	{
 		if (score >= DealerMin && score <= WinScore)
 		{
-			IBlackjackActions::Execute_PlayerStand(this->GetController());
+			if (this->GetController() != nullptr)
+			{
+				IBlackjackActions::Execute_PlayerStand(this->GetController());
+			}
 			return false;
 		}
 	}
@@ -91,8 +94,10 @@ bool ABlackJack_Pawn::PlayerContinueTurn(int score)
 	}
 	else if (score == WinScore) //score equals winscore, automatically stands
 	{
-		IBlackjackActions::Execute_PlayerStand(this->GetController());
-
+		if (this->GetController() != nullptr)
+		{
+			IBlackjackActions::Execute_PlayerStand(this->GetController());
+		}
 		return false;
 	}
 	return true;
@@ -136,7 +141,7 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 	{
 		PlayerScore = ProcessScore();
 		WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
-		PlayerContinueTurn(PlayerScore);
+		bool continueplaying = PlayerContinueTurn(PlayerScore);
 	}
 
 }

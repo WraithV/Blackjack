@@ -25,11 +25,14 @@ public:
 	// Sets default values for this pawn's properties
 	ABlackJack_Pawn();
 
-	const int WinScore = 21;
-	const int DealerMin = 17;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int WinScore = 21;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int DealerMin = 17;
 	//Dealer Variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsDealer = false;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EPlayerStatus CurrentStatus;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

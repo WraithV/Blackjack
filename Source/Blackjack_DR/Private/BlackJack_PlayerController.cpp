@@ -130,7 +130,8 @@ void ABlackJack_PlayerController::DealCards()
 			{
 				faceUp = false;
 			}
-			UE_LOG(LogTemp, Warning, TEXT("card num %i"), CurrentCard);
+
+
 			CurrentPawn->PlayerAddCard(CardDeck[CurrentCard], faceUp);
 			CurrentCard++;
 		}
@@ -258,6 +259,7 @@ void ABlackJack_PlayerController::EndTurn_Implementation()
 {
 	if (CurrentPlayer->IsDealer)
 	{
+		DealerEnds_Implementation();
 		return;
 	}
 	CurrentPlayerIndex++;

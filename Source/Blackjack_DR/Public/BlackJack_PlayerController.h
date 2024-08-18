@@ -32,14 +32,16 @@ class BLACKJACK_DR_API ABlackJack_PlayerController : public APlayerController, p
 public:
 	UPROPERTY(EditDefaultsOnly)
 	int NumPlayers = 3; //Max Players 3
+	UPROPERTY(BlueprintReadOnly)
 	int CurrentPlayerIndex; //TODO: do we need this as well as currentPlayer?
-
+	UPROPERTY(EditAnywhere)
 	TArray<class ABlackJack_Pawn*> PlayerList;
-
 	//Card Variables
+	UPROPERTY(BlueprintReadOnly)
 	int CurrentCard = 0;
+	UPROPERTY(BlueprintReadOnly)
 	TArray<class ACard*> CardDeck; //list of cards, will be shuffled	
-
+	UPROPERTY(BlueprintReadOnly)
 	TArray<class ACardAce*> AceCards;
 
 	UPROPERTY(EditAnywhere)
