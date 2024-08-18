@@ -25,9 +25,12 @@ public:
 
 	const int WinScore = 21;
 	const int DealerMin = 17;
+	//Dealer Variables
+	bool IsDealer = false;
 
 	EPlayerStatus CurrentStatus;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<class ACard*> PlayerHand; //Card Actors
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -43,8 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UPlayerHand* WPlayerHandWidget; //Widget connected to this player
 
-	//Dealer Variables
-	bool IsDealer = false;
+	
 
 
 private:

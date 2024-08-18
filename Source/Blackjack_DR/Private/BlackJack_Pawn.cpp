@@ -93,13 +93,6 @@ bool ABlackJack_Pawn::CalculatePlayerScore()
 	return true;
 }
 
-// Called every frame
-//void ABlackJack_Pawn::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
-
 void ABlackJack_Pawn::StartPlaying()
 {
 	SendStatus(EPlayerStatus::Playing);
@@ -167,23 +160,28 @@ void ABlackJack_Pawn::DealerPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("no pawn for dealer")));
 	}
+	for (ACard* card : PlayerHand)
+	{
+		card->FaceUp = true;
+	}
+
 	WPlayerHandWidget->FlipCards();
 
-	if (!CalculatePlayerScore() || PlayerScore >= DealerMin) //End turn if dealer is over DealerMin score
-	{
+	//if (!CalculatePlayerScore() || PlayerScore >= DealerMin) //End turn if dealer is over DealerMin score
+	//{
 
-		IBlackjackActions::Execute_DealerEnds(this->GetController());
+	//	IBlackjackActions::Execute_DealerEnds(this->GetController());
 
-	}
+	//}
 	//deal until dealer hits his max or busts
 	for (int i = 0; i < 10; i++)
 	{
-		IBlackjackActions::Execute_PlayerHit(this->GetController());
-
 		if (!CalculatePlayerScore() || PlayerScore >= DealerMin)
 		{
 			break;
 		}
+
+		IBlackjackActions::Execute_PlayerHit(this->GetController());
 	}
 
 	IBlackjackActions::Execute_DealerEnds(this->GetController());
