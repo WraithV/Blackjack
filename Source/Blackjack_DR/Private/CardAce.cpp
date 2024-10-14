@@ -3,6 +3,24 @@
 
 #include "CardAce.h"
 
+#include "BlackJack_PlayerController.h"
+
+
+void ACardAce::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BlackJackPlayer = Cast<ABlackJack_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	
+	if (!BlackJackPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CardAce unable to get player controller"));
+		//this->ConsoleCommand("quit");
+	}
+	//Bind ResetGameDelgate to ResetAceValue Function
+	BlackJackPlayer->ResetGame.AddDynamic(this, &ACardAce::ResetAceValue);
+}
 
 //Reduce Value of Ace card if it has not been done so already
 bool ACardAce::ReduceValue()
@@ -19,4 +37,10 @@ bool ACardAce::ReduceValue()
 void ACardAce::ResetAceValue()
 {
 	CardValue = 11;
+
+	UE_LOG(LogTemp, Warning, TEXT("Reset Ace Value"));
+
 }
+
+
+//On create subscribe to delegate and execute resetAceValue

@@ -66,6 +66,24 @@ int ABlackJack_Pawn::ProcessScore()
 	return ProcessedScore;
 }
 
+void ABlackJack_Pawn::BeginPlay()
+{
+
+	Super::BeginPlay();
+
+	BlackJackController = Cast<ABlackJack_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	if (BlackJackController)
+	{
+		//Bind ResetGameDelgate to resetPlayer Function
+		BlackJackController->ResetGame.AddDynamic(this, &ABlackJack_Pawn::resetPlayer);
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("bj pawn cpp controller not found"));
+	}
+}
+
 
 /*Determine if this player can continue playing
 * Dealer player will stand (not continue) if over 17 and not bust
@@ -117,6 +135,8 @@ void ABlackJack_Pawn::StartPlaying()
 //Reset Player in preparation for a new round
 void ABlackJack_Pawn::resetPlayer()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Reset Player"));
+
 	SendStatus(EPlayerStatus::Waiting);
 
 	PlayerScore = 0;

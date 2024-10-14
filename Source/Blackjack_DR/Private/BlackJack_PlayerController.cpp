@@ -26,6 +26,7 @@ void ABlackJack_PlayerController::BeginPlay()
 	{
 		ABlackJack_Pawn* NewPawn = GetWorld()->SpawnActor<ABlackJack_Pawn>(Location, Rotation, SpawnInfo);
 
+
 		PlayerList.Add(NewPawn);
 
 		if (i == NumPlayers) //Setup last player as the dealer
@@ -82,8 +83,14 @@ void ABlackJack_PlayerController::SpawnCardActor(int Value, FString Name)
 	if (Name == "A") //If ace card
 	{
 		NewCard = GetWorld()->SpawnActor<ACardAce>(Location, Rotation, SpawnInfo);
+		ACardAce* NewCardAce = (ACardAce*) NewCard;
 
-		AceCards.Add(Cast<ACardAce>(NewCard));
+		AceCards.Add(NewCardAce); //casting because NewCard is
+
+		//ResetGame.AddUniqueDynamic(this, NewCardAce.ResetAceValue());
+
+
+		//TODO: connect to event dispatcher HERE
 
 	}
 	else
@@ -230,16 +237,10 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 {
 	CurrentCard = 0;
 
-	for (int i = 0; i < PlayerList.Num() ;i++) 
-	{
-		PlayerList[i]->resetPlayer();
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("Broadcast reset"));
+	ResetGame.Broadcast(); //Reset All Items watching this Delegate
+	//UE_LOG(LogTemp, Warning, TEXT("End reset"));
 
-	for (ACardAce* Aces : AceCards) //Reset any ace cards which were reduced in the previous round
-	{
-		Aces->ResetAceValue();
-	}
-	
 	ShuffleArray(CardDeck);
 	CurrentPlayerIndex = 0;
 

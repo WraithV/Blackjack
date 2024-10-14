@@ -33,4 +33,3 @@ void ACard::SetupCardValues(int NewValue, FString NewName, bool IsCardFaceup)
 	CardName = NewName;
 	FaceUp = IsCardFaceup;
 }
-

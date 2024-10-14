@@ -58,11 +58,17 @@ private:
 	virtual int ProcessScore();
 
 protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	class ABlackJack_PlayerController* BlackJackController; //Forward Declaration to save on compile time
 
 public:	
-
 	virtual void StartPlaying();
+
+	UFUNCTION(BlueprintCallable)
 	virtual void resetPlayer();
+
 	virtual void PlayerAddCard(ACard* NewCard, bool IsFaceUp);
 	virtual void PlayerStands();
 	virtual void PlayerBust();

@@ -24,6 +24,9 @@
 * This single player controller possess pawns in turn
 * Implements IBlackjackActions to execute gameplay functionality
 */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FResetGameDelegate); //Delegate to reset the game
+
 UCLASS()
 class BLACKJACK_DR_API ABlackJack_PlayerController : public APlayerController, public IBlackjackActions
 {
@@ -79,5 +82,8 @@ public:
 	void DealerEnds_Implementation() override;
 	void StartGame_Implementation() override;
 	void EndTurn_Implementation() override;
+
+	UPROPERTY(EditAnywhere)
+	FResetGameDelegate ResetGame;
 	
 };
