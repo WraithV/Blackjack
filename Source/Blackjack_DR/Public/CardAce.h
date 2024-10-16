@@ -22,7 +22,7 @@ class BLACKJACK_DR_API ACardAce : public ACard
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
-	class ABlackJack_PlayerController* BlackJackPlayer; //Forward Declaration to save on compile time
+	class ABlackJack_PlayerController* BlackJackController; //Forward Declaration to save on compile time
 	
 	public:
 	virtual bool ReduceValue();

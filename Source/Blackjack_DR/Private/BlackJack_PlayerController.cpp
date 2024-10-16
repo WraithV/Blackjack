@@ -8,6 +8,8 @@
 #include "BlackJackBoard.h"
 #include "Blueprint/UserWidget.h"
 
+#include "Runtime/Engine/Public/TimerManager.h"
+
 
 /* Spawn Pawns for each player up to a maximum of 3 players (excluding the dealer)
 * Also setup the last player as the dealer
@@ -115,7 +117,7 @@ void ABlackJack_PlayerController::CreateCardDeck()
 		{
 			FName name = data.Key;
 
-			FCardData* MyStruct = reinterpret_cast<FCardData*>(data.Value);
+			FCardData* MyStruct = reinterpret_cast<FCardData*>(data.Value); //Force struct to be type FCardData TODO:investigate
 
 			SpawnCardActor(MyStruct->CardValue, MyStruct->CardName);
 		}
@@ -126,6 +128,9 @@ void ABlackJack_PlayerController::CreateCardDeck()
 //Deal two cards to all players, the dealers second card value is hidden (face down)
 void ABlackJack_PlayerController::DealCards()
 {
+	//GetWorld()->GetTimerManager().SetTimer(_loopTimerHandle, this, &ABlackJack_PlayerController::OnTimerEnd, 1.5f, false);
+
+
 	for (int i = 0; i < 2; i++)
 	{
 		for (ABlackJack_Pawn* CurrentPawn : PlayerList)
@@ -142,6 +147,7 @@ void ABlackJack_PlayerController::DealCards()
 			CurrentPawn->PlayerAddCard(CardDeck[CurrentCard], faceUp);
 			CurrentCard++;
 		}
+
 	}
 }
 
@@ -151,7 +157,7 @@ void ABlackJack_PlayerController::DealCards()
 */
 void ABlackJack_PlayerController::DetermineWinners()
 {
-	UE_LOG(LogTemp, Warning, TEXT("The Game ends"));
+	UE_LOG(LogTemp, Log, TEXT("The Game ends"));
 
 	int DealerScore = DealerPawn->PlayerScore;
 	for (ABlackJack_Pawn* players : PlayerList)
@@ -217,6 +223,8 @@ void ABlackJack_PlayerController::PlayerHit_Implementation()
 //Update player status to 'Stand' and end the players turn
 void ABlackJack_PlayerController::PlayerStand_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("current player is standing"));
+
 	CurrentPlayer->PlayerStands();
 
 	EndTurn_Implementation();
@@ -237,9 +245,7 @@ void ABlackJack_PlayerController::StartGame_Implementation()
 {
 	CurrentCard = 0;
 
-	//UE_LOG(LogTemp, Warning, TEXT("Broadcast reset"));
 	ResetGame.Broadcast(); //Reset All Items watching this Delegate
-	//UE_LOG(LogTemp, Warning, TEXT("End reset"));
 
 	ShuffleArray(CardDeck);
 	CurrentPlayerIndex = 0;
@@ -271,5 +277,10 @@ void ABlackJack_PlayerController::EndTurn_Implementation()
 	this->Possess(CurrentPlayer);
 
 	CurrentPlayer->StartPlaying();
+
+}
+
+void ABlackJack_PlayerController::OnTimerEnd()
+{
 
 }

@@ -66,6 +66,16 @@ int ABlackJack_Pawn::ProcessScore()
 	return ProcessedScore;
 }
 
+//Process player score, update the widget UI and determine if the player is able to continue playing
+void ABlackJack_Pawn::UpdatePlayerScore()
+{
+	PlayerScore = ProcessScore();
+	WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
+	PlayerContinueTurn(PlayerScore);
+}
+
+
+//Bind Delegates on begin play
 void ABlackJack_Pawn::BeginPlay()
 {
 
@@ -85,25 +95,13 @@ void ABlackJack_Pawn::BeginPlay()
 }
 
 
-/*Determine if this player can continue playing
-* Dealer player will stand (not continue) if over 17 and not bust
+/*Determine if this player can continue their turn
+* Players turn ends if at or above the max score
 * @param Score: value used to determine if the player can continue their turn
 * @return true if players score is less than the winScore
 */
 bool ABlackJack_Pawn::PlayerContinueTurn(int score)
 {
-	if (IsDealer)
-	{
-		if (score >= DealerMin && score <= WinScore)
-		{
-			if (this->GetController() != nullptr)
-			{
-				IBlackjackActions::Execute_PlayerStand(this->GetController());
-			}
-			return false;
-		}
-	}
-
 	if (score > WinScore) //score over WinScore, player busts
 	{
 		PlayerBust();
@@ -127,8 +125,17 @@ void ABlackJack_Pawn::StartPlaying()
 {
 	SendStatus(EPlayerStatus::Playing);
 
+	//UpdatePlayerScore();
+
 	if (IsDealer)
 	{
+		//flip cards
+		UE_LOG(LogTemp, Warning, TEXT("Dealer: flips Cards"));
+		PlayerHand[1]->FaceUp = true;
+		WPlayerHandWidget->FlipCards(); //Make flipped cards value visible on the cards widget
+
+		UpdatePlayerScore();
+
 		DealerPlay();
 	}
 }
@@ -159,9 +166,7 @@ void ABlackJack_Pawn::PlayerAddCard(ACard* NewCard, bool IsFaceUp)
 
 	if (IsFaceUp)
 	{
-		PlayerScore = ProcessScore();
-		WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
-		bool continueplaying = PlayerContinueTurn(PlayerScore);
+		UpdatePlayerScore();
 	}
 
 }
@@ -184,33 +189,30 @@ void ABlackJack_Pawn::PlayerBust()
 	IBlackjackActions::Execute_EndTurn(this->GetController());
 }
 
-//Dealer continues hitting until over DealerMin or Busts
+//Dealer Checks score and hits if below a minimum score
 void ABlackJack_Pawn::DealerPlay()
 {
-	bool continuePlaying = true;
+	UE_LOG(LogTemp, Log, TEXT("Dealer play start"));
 
-	//Flip all cards in the dealers hand
-	for (ACard* card : PlayerHand)
+	//Check for Dealer win condition
+	if (PlayerScore >= DealerMin && PlayerScore <= WinScore)
 	{
-		card->FaceUp = true;
-	}
-
-	WPlayerHandWidget->FlipCards(); //Make flipped cards value visible on the cards widget
-
-	
-	while (continuePlaying)
-	{
-		PlayerScore = ProcessScore();
-		WPlayerHandWidget->UpdatePlayerScore(PlayerScore);
-		continuePlaying = PlayerContinueTurn(PlayerScore);
-		if (continuePlaying)
+		if (this->GetController() != nullptr)
 		{
-			IBlackjackActions::Execute_PlayerHit(this->GetController());
+			UE_LOG(LogTemp, Log, TEXT("Dealer Stands"));
+			PlayerStands();
 		}
-		
 	}
 
-	IBlackjackActions::Execute_DealerEnds(this->GetController());
+	if (CurrentStatus == EPlayerStatus::Playing)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Continue playing"));
+		GetWorld()->GetTimerManager().SetTimer(DealerDelayTimer, this, &ABlackJack_Pawn::LoopingHit, 1.2f, false);
+	}
+	else
+	{
+		IBlackjackActions::Execute_DealerEnds(this->GetController());
+	}
 }
 
 
@@ -231,4 +233,17 @@ void ABlackJack_Pawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+//Called by DealerPlay on a timer, if the dealer has not stood or bust it will run DealerPlay again
+void ABlackJack_Pawn::LoopingHit()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Dealer Hits"));
+
+	IBlackjackActions::Execute_PlayerHit(this->GetController());
+
+	if (CurrentStatus == EPlayerStatus::Playing)
+	{
+		DealerPlay();
+	}
 }

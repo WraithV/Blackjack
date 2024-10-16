@@ -85,5 +85,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FResetGameDelegate ResetGame;
+
+private:
+	FTimerHandle CardTimer;
+
+	void OnTimerEnd();
 	
 };

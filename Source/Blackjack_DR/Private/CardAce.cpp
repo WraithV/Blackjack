@@ -10,16 +10,12 @@ void ACardAce::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BlackJackPlayer = Cast<ABlackJack_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	BlackJackController = Cast<ABlackJack_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+	//Bind ResetGameDelgate to ResetAceValue Function
+	BlackJackController->ResetGame.AddDynamic(this, &ACardAce::ResetAceValue);
 
 	
-	if (!BlackJackPlayer)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("CardAce unable to get player controller"));
-		//this->ConsoleCommand("quit");
-	}
-	//Bind ResetGameDelgate to ResetAceValue Function
-	BlackJackPlayer->ResetGame.AddDynamic(this, &ACardAce::ResetAceValue);
 }
 
 //Reduce Value of Ace card if it has not been done so already
@@ -38,7 +34,7 @@ void ACardAce::ResetAceValue()
 {
 	CardValue = 11;
 
-	UE_LOG(LogTemp, Warning, TEXT("Reset Ace Value"));
+	//UE_LOG(LogTemp, Warning, TEXT("Reset Ace Value"));
 
 }
 
